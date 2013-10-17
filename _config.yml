@@ -1,0 +1,6 @@
+name: Transponder Media
+markdown: redcarpet
+pygments: true
+
+baseurl: /transpondermedia
+permalink: /:categories/:title

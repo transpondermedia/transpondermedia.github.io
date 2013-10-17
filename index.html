@@ -1,0 +1,41 @@
+---
+layout: default
+title: A New Step in the Progression of Design
+---
+
+<div class="featured project">
+	<div class="section-container col-2">
+	  {% for post in site.categories['featured'] %}
+	  	<div class="column text">
+		    <h2 class="title">{{ post.title }}</h2>
+		    {{ post.excerpt }}
+	  	</div>
+	  	<div class="column img">
+	  	
+	  	</div>
+	  {% endfor %}
+	</div>
+</div>
+
+<div id="recent" class="project separator">
+	<div class="section-container col-3">
+		<h3 class="subtitle">Recent Projects</h3>
+	  {% for post in site.categories['project'] %}
+	    <div class="column">
+		    <strong>{{ post.title }}</strong>
+		    {{ post.excerpt }}
+	    </div>
+	  {% endfor %}
+	</div>
+</div>
+
+<div id="home">
+	<div class="section-container">
+	  <h1>Blog Posts</h1>
+	  <ul class="posts">
+	    {% for post in site.posts %}
+	      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</div>
+</div>

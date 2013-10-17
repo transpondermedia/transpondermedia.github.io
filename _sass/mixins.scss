@@ -1,0 +1,281 @@
+//
+// Mixins
+// -----------------------------------------------------------------------------
+// To use a mixin in this file, add this line to the top of your .scss file:
+//   @import "base"; (_base.scss imports _custom.scss).
+//
+// Then to use a mixin for a particular rule, add this inside the ruleset's
+// curly brackets:
+//   @include mix-in-name;
+//
+
+//
+// Custom Mixins
+//
+@mixin block($block-color) {
+  display: block;
+  background-color: $block-color;
+}
+
+@mixin inline {
+	display: inline-block;
+	vertical-align: top;
+}
+
+@mixin dumpster-icon {
+	opacity: .2;
+	left: 0;
+	width: $full;
+	content: "!";
+}
+
+@mixin active($color, $ts) {
+  color: $color;
+  text-shadow: $ts;
+}
+
+@mixin uppercase {
+	text-transform: uppercase;
+	letter-spacing: -.05em;
+}
+
+@mixin lowercase {
+	text-transform: lowercase;
+}
+
+@mixin dot {
+	height: 5px;
+	width: 5px;
+	padding: 1px;
+	margin: -2px 2px 0;
+	line-height: 0;
+	@include inline-block(middle);
+	@include border-radius(30px);
+}
+
+@mixin column {
+	@include column-count(2);
+	
+	@media screen and (max-width: 320px) {
+		@include column-count(1);
+	}
+	
+	@media screen and (min-width: 690px) and (max-width: 899px) {
+		@include column-count(3);
+	}
+	
+	@media screen and (min-width: 900px) {
+		@include column-count(4);
+	}
+}
+
+@mixin no-space {
+  margin: 0;
+  padding: 0;
+}
+
+//
+// Button
+//
+@mixin btn ($color_1, $color_2) {
+	font-weight: 900;
+	border: 1px solid #8AB154;
+	padding: $bump/2 $bump;
+	@include uppercase;
+	@include text-shadow(0 1px 1px #AFC386);
+	@include background-image(linear-gradient($color_1 0%, $color_2 85%));
+	@include filter-gradient($color_1, $color_2);
+	@include border-radius(5px);
+}
+
+@mixin button($color: $light, $text_color: $dark) {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font: 14px/100%;
+  padding: .5em 1.5em .55em;
+  text-shadow: 0 1px 1px rgba(0,0,0,.15);
+  @include rounded();
+  @include box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.2));
+ 
+  color: $text_color !important;
+  font-weight: bold;
+  border: solid 1px darken($color, 18%);
+  background: $color;
+  @include gradient(saturate($color, 15%), darken($color, 15%));
+ 
+  &:hover {
+    text-decoration: none;
+    background: saturate($color, 10%);
+    @include gradient(saturate($color, 5%), darken($color, 5%));
+  }
+ 
+  &:active {
+    position: relative;
+    top: 1px;
+    color: saturate($color, 15%);
+    @include gradient(saturate($color, 15%), lighten($color, 15%));
+  }
+}
+
+@mixin rounded($radius: 0.5em) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+ 
+@mixin gradient($from, $to) {
+  background: -webkit-gradient(linear, left top, left bottom, from($from), to($to));
+  background: -moz-linear-gradient(top,  $from, $to);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+}
+
+// Baseline, measured in pixels
+// The value should be the same as the font-size value for the html element
+// If the html element's font-size is set to 62.5% (of the browser's default font-size of 16px),
+// then the variable below would be 10px.
+$baseline-px: 10px;
+
+@mixin rem($property, $px-values) {
+  // Convert the baseline into rems
+  $baseline-rem: $baseline-px / 1rem;
+  // Print the first line in pixel values
+  #{$property}: $px-values;
+  // If there is only one (numeric) value, return the property/value line for it.
+  @if type-of($px-values) == "number" {
+    #{$property}: $px-values / $baseline-rem; }
+  @else {
+    // Create an empty list that we can dump values into
+    $rem-values: unquote("");
+    @each $value in $px-values {
+      // If the value is zero, return 0
+      @if $value == 0 {
+        $rem-values: append($rem-values, $value); }
+      @else {
+        $rem-values: append($rem-values, $value / $baseline-rem); } }
+    // Return the property and its list of converted values
+    #{$property}: $rem-values; } }
+
+//
+// Markup free clearing
+// http://www.stubbornella.org/content/2012/05/02/cross-browser-debugging-css/
+//
+
+@mixin cf {
+  clear: left;
+  *overflow: visible; // Protect IE7 and older from the overflow property
+  *zoom: 1;           // Give IE hasLayout, a new formatting context equivalent
+}
+
+@mixin width-reset {
+  float: none;
+  width: $full;
+}
+
+
+//
+// Image replacement
+// Kellum Method: http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement
+// Additional helpers from http://html5boilerplate.com/docs/css/
+// This is also included as a SASS mixin, see: sass/custom.rb
+//
+
+@mixin ir {
+  // Kellum Method
+  display: block !important;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  // Additional helpers
+  border: 0;                     // Remove the default border from elements like <button>
+  font: 0/0 a;                   // Crush the text down to take up no space
+  text-shadow: none;             // Remove any text shadows
+  color: transparent;            // Hide any residual text in Safari 4 and any mobile devices that may need it
+  background-color: transparent; // Hide the default background color on elements like <button>
+}
+
+
+//
+// element-invisible improved and more robust
+//
+@mixin element-invisible {
+  border: 0;
+  height: 1px;
+  overflow: hidden;
+/*   padding: 0; */
+  position: absolute !important;
+  width: 1px;
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    clip: rect(1px 1px 1px 1px); // IE6 and IE7 use the wrong syntax
+  }
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+
+//
+// Turns off the element-invisible effect
+//
+@mixin element-invisible-off {
+  position: static !important;
+  clip: auto;
+  height: auto;
+  width: auto;
+  overflow: auto;
+}
+
+@mixin element-focusable {
+  @include element-invisible;
+
+  &:active,
+  &:focus {
+    @include element-invisible-off;
+  }
+}
+
+
+//
+// Shift content offscreen, can be usefull when you reall need to do this
+//
+@mixin offscreen {
+  position: absolute;
+  top: -99999em;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  outline: 0;
+}
+
+
+//
+// Hide content from all users
+//
+@mixin element-hidden {
+  display: none;
+}
+
+
+//
+// The word "Unpublished" displayed underneath unpublished nodes and comments
+//
+@mixin unpublished {
+  color: pink; // target browsers that do not support rgba
+  color: rgba(239, 170, 170, 0.4);
+  font-family: $impact;
+  font-weight: 700;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  text-align: center;
+  text-transform: uppercase;
+  word-wrap: break-word;
+	@include adjust-font-size-to(50px);
+
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    .ie6-7 &>* {
+      position: relative; // Otherwise these elements will appear below the "Unpublished" text.
+    }
+  }
+}
