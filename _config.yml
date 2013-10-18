@@ -2,5 +2,5 @@ name: Transponder Media
 markdown: redcarpet
 pygments: true
 
-baseurl: /transpondermedia
+;baseurl: /transpondermedia
 permalink: /:categories/:title
